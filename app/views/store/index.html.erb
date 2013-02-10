@@ -3,7 +3,7 @@
 <% end %>
 
 <h1>Your Pragmatic Catalog</h1>
-
+<% if @visit > 5 %>Liczna odwiedzin: <%= pluralize(@visit ||=0, 'raz', 'razy')%><% end %>
 <% @products.each do |product| %>
   <div class="entry">
     <%= image_tag(product.image_url) %>

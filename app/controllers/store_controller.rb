@@ -7,8 +7,15 @@
 # Visit http://www.pragmaticprogrammer.com/titles/rails4 for more book information.
 #---
 class StoreController < ApplicationController
+  skip_before_filter :authorize
   def index
     @products = Product.order(:title)
     @cart = current_cart
+    @visit = incrise_visit
+  end
+
+  def incrise_visit
+    session[:visit_counter] ||= 0
+    @visit = session[:visit_counter] += 1
   end
 end

@@ -31,6 +31,12 @@
 <!-- END_HIGHLIGHT -->
   </div>
   <div class="field">
+    <%= f.label :ship_date %><br />
+<!-- START_HIGHLIGHT -->
+    <%= f.date_select :ship_date, size: 40 %>
+<!-- END_HIGHLIGHT -->
+  </div>
+  <div class="field">
     <%= f.label :pay_type %><br />
 <!-- START_HIGHLIGHT -->
     <%= f.select :pay_type, Order::PAYMENT_TYPES,
