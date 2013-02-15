@@ -42,13 +42,13 @@ namespace :deploy do
   desc "reload the database with seed data"
   task :seed do
     run "cd #{current_path}; \
-      rake db:seed RAILS_ENV=#{rails_env}"
+    rake db:seed RAILS_ENV=#{rails_env}"
   end
 end
 
-#desc "copy shared/database.yml to current/config/database.yml"
-#task :copy_database_yml do 
-#  run "cp #{shared_path}/database.yml #{current_path}/config/database.yml"
-#end  
+desc "symlink_databes_yml"
+task :symlink_databes_yml do 
+  run "ln -fs #{shared_path}/database.yml #{current_path}/config/database.yml"
+end  
 
-#after 'deploy:create_symlink','copy_database_yml'
+after 'deploy:create_symlink','symlink_databes_yml'
