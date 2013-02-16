@@ -45,3 +45,10 @@ gem 'rvm-capistrano'
 # gem 'debugger'
 
 gem 'will_paginate', '~> 3.0'
+gem 'sunspot_rails'
+ 
+group :development do
+  gem 'sunspot_solr'
+end
+
+gem 'progress_bar'

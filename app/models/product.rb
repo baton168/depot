@@ -7,13 +7,14 @@
 # Visit http://www.pragmaticprogrammer.com/titles/rails4 for more book information.
 #---
 class Product < ActiveRecord::Base
+  attr_accessible :description, :image_url, :price, :title, :published_at, :comments_attributes
   has_many :line_items
   has_many :orders, through: :line_items
-  #...
-
+  has_many :comments
+  accepts_nested_attributes_for :comments, reject_if: :all_blank
   before_destroy :ensure_not_referenced_by_any_line_item
 
-  attr_accessible :description, :image_url, :price, :title
+  
   validates :title, :description, :image_url, presence: true
   validates :price, numericality: {greater_than_or_equal_to: 0.01}
 # 
@@ -23,6 +24,22 @@ class Product < ActiveRecord::Base
     message: 'must be a URL for GIF, JPG or PNG image.'
   }
   validates :title, length: {minimum: 10}
+
+  scope :published, lambda{where('published_at <= ?', Time.zone.now)}
+  searchable do
+    text :title, boost: 5
+    text :title, :description, :publish_month
+    text :comments do
+      comments.map(&:content)
+      #comments.map { |c| c.content } to samo co linijka wyzej
+    end
+    time :published_at
+    string :publish_month
+  end
+
+  def publish_month
+    published_at.strftime("%B %Y")
+  end
 
   private
 

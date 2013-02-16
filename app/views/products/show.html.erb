@@ -1,5 +1,6 @@
+<% if notice %>
 <p id="notice"><%= notice %></p>
-
+<% end %>
 <p>
   <b>Title:</b>
   <%= @product.title %>
@@ -20,6 +21,28 @@
   <%= @product.price %>
 </p>
 
+<h2>Comment</h2>
+<% @comments.each do |comment| %>
+    <div class="<%= cycle('list_line_odd','list_line_even')%>">
+    <p><%= comment.content %></p>
+    <p>Rate: <%= comment.rate %></p>
+    <p>Added: <%= time_ago_in_words(comment.created_at)%> ago</p>
+    </div> 
+<% end %>
+<h3>Add comment</h3>
+<%= form_for @product do |f| %>
+  <%= f.fields_for :comments, Comment.new do |comment| %>
+  <p>
+    <%= comment.label :content %><br />
+    <%= comment.text_field :content %>
+  </p>
+  <p>
+    <%= comment.label :rate %><br />
+    <%= comment.select :rate, Comment::RATES, {include_blank: true} %>
+  </p>
+<% end %>
+<p><%= f.submit "Submit"%></p>   
+<% end %>
 
 <%= link_to 'Edit', edit_product_path(@product) %> |
 <%= link_to 'Back', products_path %>
