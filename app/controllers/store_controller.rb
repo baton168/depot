@@ -8,6 +8,7 @@
 #---
 class StoreController < ApplicationController
   skip_before_filter :authorize, :search
+  layout nil, only: [:search]
   def index
     @products = Product.published.order(:title)
     @cart = current_cart
@@ -20,17 +21,46 @@ class StoreController < ApplicationController
   end
 
   def search
-    @search = Product.search do 
-      fulltext params[:search]
-      with(:published_at).less_than(Time.zone.now)
-      facet(:publish_month)
-      if params[:month].present?
-        with(:publish_month, params[:month])
+    #@search = Product.search do 
+    #  fulltext ActiveSupport::Inflector.transliterate(params[:search]).downcase
+    #  with(:published_at).less_than(Time.zone.now)
+    #  facet(:publish_month)
+    #  with(:publish_month, params[:month]) if params[:month].present?
+    #end
+
+    term = ActiveSupport::Inflector.transliterate(params[:term]).downcase
+    words = term.split(/\s/)
+    prefix = words.pop
+    full_words = words.join('')
+    all_fields = [:title, :description]
+
+    list = Sunspot.search(Product) do
+      keywords(full_words, field: all_fields)
+      text_fields do |text_fields_query|
+        text_fields_query.any_of do |any_of_query|
+          all_fields.each do |text_field|
+            any_of_query.with(text_field).starting_with(prefix.downcase)
+          end
+        end
       end
     end
-    @products = @search.results
-    @visit = incrise_visit
-    render :index
+    @data = []
 
-  end
+    list.each_hit_with_result do |hit, result|
+      @data << {label: result.title,
+                id: result.id,
+                value: result.title,
+                description: "#{ result.title }<br />#{ result.description }",
+                link: products_path(result)
+               }  
+    end
+    #@products = @search.results
+    @visit = incrise_visit
+    #render :index
+
+    respond_to do |format|
+      format.json { render json: @data.uniq.to_json }
+    end
+
+    end
 end

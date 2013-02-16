@@ -93,6 +93,8 @@ GEM
       activesupport (= 3.2.11)
       bundler (~> 1.0)
       railties (= 3.2.11)
+    rails3-jquery-autocomplete (1.0.10)
+      rails (~> 3.0)
     railties (3.2.11)
       actionpack (= 3.2.11)
       activesupport (= 3.2.11)
@@ -146,6 +148,7 @@ DEPENDENCIES
   mysql2 (~> 0.3.11)
   progress_bar
   rails (= 3.2.11)
+  rails3-jquery-autocomplete
   rvm-capistrano
   sass-rails (~> 3.2.3)
   sunspot_rails

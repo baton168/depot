@@ -43,7 +43,7 @@ gem 'rvm-capistrano'
 
 # To use debugger
 # gem 'debugger'
-
+gem 'rails3-jquery-autocomplete'
 gem 'will_paginate', '~> 3.0'
 gem 'sunspot_rails'
  
